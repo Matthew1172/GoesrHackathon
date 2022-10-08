@@ -16,31 +16,34 @@ def get_urls_for_prefix(prefix):
 def handleSaveImage(url, path):
     timeSliceUrls = get_urls_for_prefix(url)
     for timeSlice in timeSliceUrls:
-        with xr.open_dataset(fsspec.open(timeSlice, anon=True).open()) as bds:
-            try:
+        try:
+            with xr.open_dataset(fsspec.open(timeSlice, anon=True).open()) as bds:
                 if 'CMI' in bds:
                     darray = bds['CMI']
                 elif 'Rad' in bds:
                     darray = bds['Rad']
                 else:
                     darray = bds['DQF']
-            except(KeyError):
-                continue
 
-            fn = bds.dataset_name
-            img_path = os.path.join(path, fn)[:-2]
-            img_path += "png"
-            if os.path.exists(img_path): continue
+                fn = bds.dataset_name
+                img_path = os.path.join(path, fn)[:-2]
+                img_path += "png"
+                if os.path.exists(img_path): continue
 
-            plt.figure(figsize=(10, 10), dpi=200)
-            plt.imshow(darray)
-            plt.axis('off')
+                plt.figure(figsize=(10, 10), dpi=200)
+                plt.imshow(darray)
+                plt.axis('off')
 
-            try:
                 plt.savefig(img_path, bbox_inches='tight')
-            except (RuntimeError, FileNotFoundError, FileExistsError):
-                print("RuntimeError or FileNotFoundError or FileExistsError: " + img_path)
-            plt.close()
+                plt.close()
+
+        except(KeyError):
+            continue
+        except (RuntimeError, FileNotFoundError, FileExistsError):
+            print("RuntimeError or FileNotFoundError or FileExistsError: " + img_path)
+            continue
+        except:
+            continue
 
 def handleSuviUrl(sat, product, y, d, h, hp):
     url = "{}/{}/{}/{}".format(product, y, d, h)
@@ -67,8 +70,8 @@ def handleNormalUrl(sat, product, y, d, h, hp, numberOfBandsStart=1, numberOfBan
             url = "{}/{}/{}/{}/{}".format(product, y, d, h, data)
             handleSaveImage(url, mp)
 
-def downloadAndCreateDirectories(fp, products, sat='G16', yrs=None, dayStart=1, dayEnd=2):
-    if yrs is None: yrs = ['2020']
+def downloadAndCreateDirectories(fp, products, sat='G16', yrs=None, dayStart=1, dayEnd=366):
+    if yrs is None: yrs = ['2022']
     for product, desc in products.items():
         pp = os.path.join(fp, product)
         try:
