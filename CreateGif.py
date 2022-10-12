@@ -17,27 +17,27 @@ class CreateGif:
         try:
             os.mkdir(self.gif_path)
         except:
-            print("Could not create gif path: {}".format(self.gif_path))
+            print("Could not create gif folder path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, self.product)
         try:
             os.mkdir(self.gif_path)
         except:
-            print("Could not create gif path: {}".format(self.gif_path))
+            print("Could not create gif product path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, self.year)
         try:
             os.mkdir(self.gif_path)
         except:
-            print("Could not create gif path: {}".format(self.gif_path))
+            print("Could not create gif year path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, self.band)
         try:
             os.mkdir(self.gif_path)
         except:
-            print("Could not create gif path: {}".format(self.gif_path))
+            print("Could not create gif band path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, str(self.mode))
         try:
             os.mkdir(self.gif_path)
         except:
-            print("Could not create gif path: {}".format(self.gif_path))
+            print("Could not create gif mode path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, str(self.startDay)+"-"+str(self.endDay)+".gif")
 
     def createGif(self):
@@ -50,7 +50,7 @@ class CreateGif:
             elif i < 100: d = '0'+str(i)
             else: d = str(i)
             dayPath = os.path.join(path, d)
-            for j in range(9):
+            for j in range(24):
                 if j < 10: h = '0'+str(j)
                 else: h = str(j)
                 hourPath = os.path.join(dayPath, h)
@@ -65,8 +65,14 @@ class CreateGif:
         frames = np.stack(images, axis=0)
         iio.mimsave(self.gif_path, frames, duration=0.1)
 
-for i in range(6, 17):
+
+year = "2022"
+product = "ABI-L1b-RadF"
+startDay = 1
+endDay = 3
+mode = 6
+for i in range(1, 17):
     if i < 10: b = '0'+str(i)
     else: b = str(i)
-    cg = CreateGif("ABI-L1b-RadF", "2020", 1, 2, b, 6, os.path.join(os.path.join(os.getcwd(), "FullDiskPngs"), "CloudMoistureImagery"))
+    cg = CreateGif(product=product, year=year, startDay=startDay, endDay=endDay, band=b, mode=mode)
     cg.createGif()

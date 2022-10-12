@@ -38,11 +38,13 @@ def handleSaveImage(url, path):
                 plt.close()
 
         except(KeyError):
+            print("Couldn't save {}! there was a Key Error.".format(img_path))
             continue
         except (RuntimeError, FileNotFoundError, FileExistsError):
             print("RuntimeError or FileNotFoundError or FileExistsError: " + img_path)
             continue
         except:
+            print("Couldn't save {}!".format(img_path))
             continue
 
 def handleSuviUrl(sat, product, y, d, h, hp):
