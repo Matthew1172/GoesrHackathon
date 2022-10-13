@@ -17,5 +17,5 @@ products = getProducts(os.path.join(os.getcwd(), "products.txt"))
 #GoesRImages//<Product>//<Year>//<Day of Year>//<Hour>//<Band>//<Mode>//<Filename>
 #or if no band and channel (SUVI)
 #GoesRImages//<Product>//<Year>//<Day of Year>//<Hour>//<Filename>
-grid = GoesRImageDownloader(fp=fp, products=products, sat='G16', yrs=['2022'], modes=['6'], startDay=1, endDay=366)
+grid = GoesRImageDownloader(fp=fp, products=products, sat='G16', yrs=['2022'], modes=['6'], startDay=14, endDay=15)
 grid.downloadAndCreateDirectories()

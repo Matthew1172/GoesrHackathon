@@ -16,30 +16,14 @@ class GoesRGifCreator:
 
         self.fp = fp
         self.gif_path = os.path.join(os.getcwd(), "Gifs")
-        try:
-            os.mkdir(self.gif_path)
-        except:
-            print("Could not create gif folder path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, self.product)
-        try:
-            os.mkdir(self.gif_path)
-        except:
-            print("Could not create gif product path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, self.year)
-        try:
-            os.mkdir(self.gif_path)
-        except:
-            print("Could not create gif year path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, self.band)
-        try:
-            os.mkdir(self.gif_path)
-        except:
-            print("Could not create gif band path: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, str(self.mode))
         try:
-            os.mkdir(self.gif_path)
+            os.makedirs(self.gif_path)
         except:
-            print("Could not create gif mode path: {}".format(self.gif_path))
+            print("Couldn't create directory: {}".format(self.gif_path))
         self.gif_path = os.path.join(self.gif_path, str(self.startDay)+"-"+str(self.endDay)+".gif")
 
     def createGif(self):

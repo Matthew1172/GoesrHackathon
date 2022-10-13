@@ -27,6 +27,10 @@ class GoesRImageDownloader():
         return files_mapper
 
     def handleSaveImage(self, url, path):
+        try:
+            os.makedirs(path)
+        except:
+            print("Could not save path: {}".format(path))
         timeSliceUrls = self.get_urls_for_prefix(url)
         for timeSlice in timeSliceUrls:
             try:
@@ -57,7 +61,7 @@ class GoesRImageDownloader():
                 print("RuntimeError or FileNotFoundError or FileExistsError: " + img_path)
                 continue
             except:
-                print("Couldn't save {}!".format(img_path))
+                print("Couldn't save {}!".format(img_path if img_path else path))
                 continue
 
     def handleSuviUrl(self, product, y, d, h, hp):
@@ -69,17 +73,8 @@ class GoesRImageDownloader():
             if i < 10: band = "0"+str(i)
             else: band = str(i)
             bp = os.path.join(hp, band)
-            try:
-                os.mkdir(bp)
-            except (FileExistsError, FileNotFoundError):
-                print("Couldnt create band directory: " + band)
             for mode in self.modes:
                 mp = os.path.join(bp, mode)
-                try:
-                    os.mkdir(mp)
-                except (FileExistsError, FileNotFoundError):
-                    print("Couldnt create mode directory: " + mode)
-
                 data = "OR_{}-M{}C{}_{}".format(product, mode, band, self.sat)
                 url = "{}/{}/{}/{}/{}".format(product, y, d, h, data)
                 self.handleSaveImage(url, mp)
@@ -87,34 +82,17 @@ class GoesRImageDownloader():
     def downloadAndCreateDirectories(self):
         for product, desc in self.products.items():
             pp = os.path.join(self.fp, product)
-            try:
-                os.mkdir(pp)
-            except (FileExistsError, FileNotFoundError):
-                print("Couldnt create product directory: " + product)
             for y in self.yrs:
                 yp = os.path.join(pp, y)
-                try:
-                    os.mkdir(yp)
-                except (FileExistsError, FileNotFoundError):
-                    print("Couldnt create year directory: " + y)
                 for d in range(self.startDay, self.endDay):
                     if d < 10: day = '00' + str(d)
                     elif d < 100: day = '0' + str(d)
                     else: day = str(d)
                     dp = os.path.join(yp, day)
-                    try:
-                        os.mkdir(dp)
-                    except (FileExistsError, FileNotFoundError):
-                        print("Couldn't create day directory: " + day)
                     for h in range(24):
                         if h < 10: hour = str(0)+str(h)
                         else: hour = str(h)
                         hp = os.path.join(dp, hour)
-                        try:
-                            os.mkdir(hp)
-                        except (FileExistsError, FileNotFoundError):
-                            print("Couldnt create hour directory: " + hour)
-
                         match product:
                             case 'ABI-L1b-RadF':
                                 self.handleNormalUrl(product, y, day, hour, hp)
